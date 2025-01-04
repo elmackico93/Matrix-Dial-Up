@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dial Up Interface - Matrix Style</title>
+    <style>
+        /* Variabili per i colori Matrix */
+        :root {
+            --primary-color: #00ff00; /* Verde puro */
+            --background-color: #000000; /* Sfondo nero */
+            --text-color: #ffffff; /* Testo bianco */
+            --font-family: 'Courier New', monospace;
+            --button-hover: #33cc33; /* Verde scuro per hover */
+            --modal-bg-color: #111; /* Sfondo scuro per la modale */
+            --modal-text-color: #00ff00; /* Testo verde per la modale */
+            --border-radius: 10px; /* Raggio bordi */
+            --button-padding: 12px 20px; /* Padding dei bottoni */
+            --button-font-size: 1.2em;
+            --transition-speed: 0.3s; /* Velocità delle animazioni */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 80%;
+            max-width: 1200px;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+            animation: flicker 2s infinite;
+        }
+
+        @keyframes flicker {
+            0% { text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color); }
+            50% { text-shadow: none; }
+            100% { text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color); }
+        }
+
+        .subheading {
+            font-size: 1.5em;
+            color: var(--text-color);
+        }
+
+        .menu {
+            margin-top: 20px;
+        }
+
+        select {
+            font-size: 1.5em;
+            padding: 12px;
+            border: 2px solid var(--primary-color);
+            background-color: #111;
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            width: 300px;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        select:hover {
+            background-color: #111;
+            border-color: var(--button-hover);
+        }
+
+        button {
+            padding: var(--button-padding);
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--button-font-size);
+            transition: background-color var(--transition-speed), transform var(--transition-speed);
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.05);
+        }
+
+        .code-display {
+            margin-top: 30px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .code-display ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .code-display li {
+            background-color: #111;
+            color: var(--primary-color);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.5em;
+            box-shadow: 0 0 10px var(--primary-color);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .code-display li:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+
+        /* Modale per il dettaglio del codice */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg-color);
+            color: var(--modal-text-color);
+            padding: 30px;
+            border-radius: 20px;
+            width: 500px;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            color: var(--modal-text-color);
+            font-size: 1.5em;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        #description {
+            font-size: 1.4em;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .apply-code-button {
+            padding: var(--button-padding);
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.5em;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .apply-code-button:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.05);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Dial Up Interface</h1>
+            <p class="subheading">Accedi ai codici segreti Android</p>
+        </header>
+
+        <!-- Menu principale -->
+        <section class="menu">
+            <select id="code-category">
+                <option value="info">Codici per informazioni sul telefono</option>
+                <option value="settings">Codici per gestione impostazioni</option>
+                <option value="troubleshooting">Codici di diagnostica</option>
+                <option value="calls">Codici per gestione chiamate</option>
+                <option value="specific">Codici per dispositivi specifici</option>
+            </select>
+            <button id="show-code">Mostra Codici</button>
+        </section>
+
+        <!-- Area di visualizzazione codici -->
+        <section id="code-display" class="code-display">
+            <!-- I codici verranno visualizzati dinamicamente qui -->
+        </section>
+
+        <!-- Modale per i dettagli del codice -->
+        <div class="modal" id="code-modal">
+            <div class="modal-content">
+                <span class="close" id="close-modal">&times;</span>
+                <h2>Codice Dettagliato</h2>
+                <p id="description">Descrizione dettagliata del codice...</p>
+                <button id="apply-code" class="apply-code-button">Applica Codice</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <button id="info-button">Informazioni</button>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const codeCategorySelect = document.getElementById("code-category");
+            const showCodeButton = document.getElementById("show-code");
+            const codeDisplayArea = document.getElementById("code-display");
+            const codeModal = document.getElementById("code-modal");
+            const closeModalButton = document.getElementById("close-modal");
+            const applyCodeButton = document.getElementById("apply-code");
+            const descriptionElement = document.getElementById("description");
+
+            const codes = {
+    info: [
+        { code: "*#*#2663#*#*", description: "Display touchscreen version information" },
+        { code: "*#*#44336#*#*", description: "Display build time" },
+        { code: "*#*#3264#*#*", description: "Check your RAM version" },
+        { code: "*#*#1111#*#*", description: "Display FTA software version" },
+        { code: "*#*#2222#*#*", description: "Display FTA hardware version" },
+        { code: "*#06#", description: "View IMEI number" },
+        { code: "*#*#232337#*#*", description: "View Bluetooth device address" },
+        { code: "*#*#232338#*#*", description: "Display Wi-Fi network's MAC address" },
+        { code: "*#*#4986*2650468#*#*", description: "View phone firmware information" },
+        { code: "*#*#34971539#*#*", description: "View camera firmware information" },
+        { code: "*#*#1234#*#*", description: "View firmware information including PDA software version" },
+        { code: "*#03#", description: "View NAND flash serial number" },
+    ],
+    settings: [
+        { code: "*#*#7594#*#*", description: "Change power button behavior" },
+        { code: "*#*#197328640#*#*", description: "Access Service Mode for tests and settings" },
+        { code: "*#3282*727336*#", description: "View storage and data consumption information" },
+        { code: "*#*#4636#*#*", description: "Display battery, WLAN, and usage statistics" },
+        { code: "*#*#225#*#*", description: "Display calendar data stored on your phone" },
+        { code: "*#2263#", description: "Display RF band selection" },
+        { code: "*3282#", description: "Receive SMS message with billing information" },
+        { code: "*#0*#", description: "Enter test mode (only available on some devices)" },
+        { code: "*#*#273282*255*663282*#*#*", description: "Make a backup of your media files" },
+        { code: "*#*#7780#*#*", description: "Factory reset your Android phone (removes all personal data)" },
+    ],
+    troubleshooting: [
+        { code: "*#*#1472365#*#*", description: "Perform a GPS test" },
+        { code: "*#*#2664#*#*", description: "Test touch-screen functionality" },
+        { code: "*#*#526#*#*", description: "Perform a WLAN test" },
+        { code: "*#*#232331#*#*", description: "Test Bluetooth functionality" },
+        { code: "*#*#7262626#*#*", description: "Perform a field test" },
+        { code: "*#*#0842#*#*", description: "Test vibration and backlight" },
+        { code: "*#*#0283#*#*", description: "Perform a packet loopback test" },
+        { code: "*#*#0588#*#*", description: "Perform a proximity sensor test" },
+        { code: "*#*#0673#*#* or *#*#0289#*#*", description: "Perform an audio and melody test" },
+        { code: "*#0782*#", description: "Perform a real-time clock test" },
+        { code: "#*#426#*#", description: "Run Google Play Services diagnostics" },
+        { code: "*#0589#", description: "Perform a light sensor test" },
+        { code: "*#0228#", description: "Check your battery status and details" },
+        { code: "*#7284#", description: "Access USB I2C mode control" },
+        { code: "*#872564#", description: "Access USB logging control" },
+        { code: "*#745#", description: "Open the RIL dump menu" },
+        { code: "*#746#", description: "Open the Debug dump menu" },
+        { code: "*#9900#", description: "Access System dump mode" },
+        { code: "*#3214789#", description: "Display the GCF mode status" },
+        { code: "*#9090#", description: "Display diagnostic configuration" },
+        { code: "*#7353#", description: "Open the Quick test menu" },
+    ],
+    calls: [
+        { code: "*#67#", description: "Display call forwarding information" },
+        { code: "*#61#", description: "Check the duration of call forwarding" },
+        { code: "*31#", description: "Turn on caller ID" },
+        { code: "#31#", description: "Turn off caller ID" },
+        { code: "*43#", description: "Turn on call waiting" },
+        { code: "#43#", description: "Turn off call waiting" },
+        { code: "*5005*7672#", description: "View your SMS message center number" },
+        { code: "#21#", description: "Display the call forwarding status for all types of calls" },
+    ],
+    specific: [
+        { code: "7764726", description: "Open hidden services menu (Motorola Droid)" },
+        { code: "1809#*990#", description: "Open hidden services menu (LG Optimus 2x)" },
+        { code: "3845#*920#", description: "Open hidden services menu (LG Optimus 3D)" },
+        { code: "*#0*#", description: "Open hidden services menu (Samsung Galaxy S3)" },
+        { code: "*#011#", description: "Display network connection and serving cell information (Samsung phones)" },
+        { code: "*#*#8736364#*#*", description: "Factory reset hidden menu (Xiaomi)" },
+        { code: "*#*#34971539#*#*", description: "Access camera firmware (Samsung)" },
+        { code: "*#2222#", description: "View device information (Samsung)" },
+        { code: "*#*#0283#*#*", description: "Enable loopback test (Samsung)" },
+        { code: "288833", description: "Samsung test menu" },
+        { code: "*#44336#", description: "Display build information (Nexus/Pixel devices)" },
+        { code: "*#0000#", description: "Access software version (Nokia)" },
+    ]
+};
+
+            // Mostra i codici per la categoria selezionata
+            function displayCodes(category) {
+                const selectedCodes = codes[category];
+                codeDisplayArea.innerHTML = "";
+                selectedCodes.forEach(code => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = code.code;
+                    listItem.addEventListener("click", () => showCodeDetails(code));
+                    codeDisplayArea.appendChild(listItem);
+                });
+            }
+
+            // Mostra i dettagli del codice selezionato nella modale
+            function showCodeDetails(code) {
+                descriptionElement.textContent = code.description;
+                codeModal.style.display = "flex";
+            }
+
+            // Chiudi la modale
+            closeModalButton.addEventListener("click", function () {
+                codeModal.style.display = "none";
+            });
+
+            // Esegui il codice (simulato come un alert in questo caso)
+            applyCodeButton.addEventListener("click", function () {
+                alert("Codice applicato: " + descriptionElement.textContent);
+            });
+
+            // Mostra i codici quando viene cliccato il pulsante "Mostra Codici"
+            showCodeButton.addEventListener("click", function () {
+                const selectedCategory = codeCategorySelect.value;
+                displayCodes(selectedCategory);
+            });
+        });
+    </script>
+</body>
+</html>
